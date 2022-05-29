@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs/ HTTP/1.1
+Content-type: application/json
+Authorization: bearer EnterToken
+
+{
+    "title": "new blog 111111",
+    "author": "new blog au23232323thor",
+    "url": "www.somewebsite.com",
+    "likes": "20"
+}
