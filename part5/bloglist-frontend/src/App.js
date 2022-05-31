@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
+
 import Blog from "./components/Blog";
+import BlogForm from "./components/BlogForm";
+
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -10,6 +13,10 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
+
+  const [title, setTitle] = useState("");
+  const [author, setAuthor] = useState("");
+  const [url, setUrl] = useState("");
 
   const [errorMessage, setErrorMessage] = useState(null);
 
@@ -56,6 +63,27 @@ const App = () => {
     }
   };
 
+  const addBlog = async (event) => {
+    event.preventDefault();
+    console.log(`title: ${title} Author: ${author}, Url: ${url}`);
+    try {
+      const newBlog = {
+        title: title,
+        author: author,
+        url: url,
+      };
+      const response = await blogService.create(newBlog);
+      blogService.getAll().then((blogs) => setBlogs(blogs));
+      setAuthor("");
+      setTitle("");
+      setUrl("");
+    } catch (exception) {
+      setErrorMessage("Error adding blog");
+      setTimeout(() => {
+        setErrorMessage(null);
+      }, 5000);
+    }
+  };
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <h2>login to application</h2>
@@ -92,12 +120,20 @@ const App = () => {
   }
   return (
     <div>
-      <h2>blogs</h2>
+      <h1>blogs</h1>
       <p>
         {user.name} logged-in
         <button onClick={handleLogout}>logout</button>
       </p>
-
+      <BlogForm
+        addBlog={addBlog}
+        setTitle={setTitle}
+        title={title}
+        setAuthor={setAuthor}
+        author={author}
+        setUrl={setUrl}
+        url={url}
+      />
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
