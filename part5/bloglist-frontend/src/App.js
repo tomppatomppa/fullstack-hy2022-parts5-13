@@ -9,7 +9,6 @@ import loginService from "./services/login";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-  const [newBlog, setNewBlog] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -18,7 +17,7 @@ const App = () => {
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
 
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -41,7 +40,6 @@ const App = () => {
   };
   const handleLogin = async (event) => {
     event.preventDefault();
-    console.log("logging in with", username, password);
 
     try {
       const user = await loginService.login({
@@ -56,34 +54,36 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setErrorMessage("Wrong Credentials");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      notify("Wrong Credentials", "alert");
     }
   };
-
+  const notify = (message, type = "info") => {
+    setNotification({ message, type });
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
   const addBlog = async (event) => {
     event.preventDefault();
     console.log(`title: ${title} Author: ${author}, Url: ${url}`);
+
+    const newBlog = {
+      title: title,
+      author: author,
+      url: url,
+    };
     try {
-      const newBlog = {
-        title: title,
-        author: author,
-        url: url,
-      };
       const response = await blogService.create(newBlog);
+      notify(`a new blog ${title} by ${author} added`);
       blogService.getAll().then((blogs) => setBlogs(blogs));
       setAuthor("");
       setTitle("");
       setUrl("");
-    } catch (exception) {
-      setErrorMessage("Error adding blog");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+    } catch (err) {
+      notify("error adding blog", "alert");
     }
   };
+
   const loginForm = () => (
     <form onSubmit={handleLogin}>
       <h2>login to application</h2>
@@ -112,8 +112,8 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <Notification message={errorMessage} />
         <h1>Blogs</h1>
+        <Notification message={notification} />
         {loginForm()}
       </div>
     );
@@ -121,6 +121,7 @@ const App = () => {
   return (
     <div>
       <h1>blogs</h1>
+      <Notification message={notification} />
       <p>
         {user.name} logged-in
         <button onClick={handleLogout}>logout</button>
