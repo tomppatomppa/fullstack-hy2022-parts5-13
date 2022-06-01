@@ -34,7 +34,10 @@ const App = () => {
   }, []);
 
   const reloadBlogs = () => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    blogService
+      .getAll()
+      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
+    console.log(blogs);
   };
 
   const handleLikeButton = async (id) => {
@@ -158,6 +161,7 @@ const App = () => {
           handleUrlChange={({ target }) => setUrl(target.value)}
         />
       </Togglable>
+
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} handleLikeChange={handleLikeButton} />
       ))}
