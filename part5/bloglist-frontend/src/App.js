@@ -129,13 +129,13 @@ const App = () => {
       </p>
       <Togglable buttonLabel="new blog">
         <BlogForm
-          addBlog={addBlog}
-          setTitle={setTitle}
+          handleSubmit={addBlog}
           title={title}
-          setAuthor={setAuthor}
           author={author}
-          setUrl={setUrl}
           url={url}
+          handleTitleChange={({ target }) => setTitle(target.value)}
+          handleAuthorChange={({ target }) => setAuthor(target.value)}
+          handleUrlChange={({ target }) => setUrl(target.value)}
         />
       </Togglable>
       {blogs.map((blog) => (
