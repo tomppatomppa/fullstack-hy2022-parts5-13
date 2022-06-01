@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
+import Togglable from "./components/Togglable";
 
 import Notification from "./components/Notification";
 import blogService from "./services/blogs";
@@ -73,7 +74,7 @@ const App = () => {
       url: url,
     };
     try {
-      const response = await blogService.create(newBlog);
+      await blogService.create(newBlog);
       notify(`a new blog ${title} by ${author} added`);
       blogService.getAll().then((blogs) => setBlogs(blogs));
       setAuthor("");
@@ -126,15 +127,17 @@ const App = () => {
         {user.name} logged-in
         <button onClick={handleLogout}>logout</button>
       </p>
-      <BlogForm
-        addBlog={addBlog}
-        setTitle={setTitle}
-        title={title}
-        setAuthor={setAuthor}
-        author={author}
-        setUrl={setUrl}
-        url={url}
-      />
+      <Togglable buttonLabel="new blog">
+        <BlogForm
+          addBlog={addBlog}
+          setTitle={setTitle}
+          title={title}
+          setAuthor={setAuthor}
+          author={author}
+          setUrl={setUrl}
+          url={url}
+        />
+      </Togglable>
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
       ))}
