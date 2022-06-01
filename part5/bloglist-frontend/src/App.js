@@ -21,7 +21,7 @@ const App = () => {
   const [notification, setNotification] = useState(null);
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs));
+    reloadBlogs();
   }, []);
 
   useEffect(() => {
@@ -33,12 +33,31 @@ const App = () => {
     }
   }, []);
 
+  const reloadBlogs = () => {
+    blogService.getAll().then((blogs) => setBlogs(blogs));
+  };
+
+  const handleLikeButton = async (id) => {
+    const blog = blogs.filter((blog) => blog.id === id);
+    console.log(blog);
+    const updateBlog = {
+      user: blog.user,
+      likes: blog[0].likes + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url,
+    };
+    await blogService.update(id, updateBlog);
+    reloadBlogs();
+  };
+
   const handleLogout = (event) => {
     event.preventDefault();
     console.log("logout", user.name);
     window.localStorage.clear();
     setUser(null);
   };
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -64,6 +83,7 @@ const App = () => {
       setNotification(null);
     }, 5000);
   };
+
   const addBlog = async (event) => {
     event.preventDefault();
     console.log(`title: ${title} Author: ${author}, Url: ${url}`);
@@ -76,7 +96,7 @@ const App = () => {
     try {
       await blogService.create(newBlog);
       notify(`a new blog ${title} by ${author} added`);
-      blogService.getAll().then((blogs) => setBlogs(blogs));
+      reloadBlogs();
       setAuthor("");
       setTitle("");
       setUrl("");
@@ -139,7 +159,7 @@ const App = () => {
         />
       </Togglable>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleLikeChange={handleLikeButton} />
       ))}
     </div>
   );
