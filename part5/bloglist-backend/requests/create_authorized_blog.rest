@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs/ HTTP/1.1
 Content-type: application/json
-Authorization: bearer EnterToken
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImthbGxlIiwiaWQiOiI2Mjk1ZDc5ZDBiNGIyZThlZmJkODM2ZTMiLCJpYXQiOjE2NTM5ODcyNDJ9.SRD6VdznLVzgm3ZpPzttfg-O-zoaSAUuPuC13G_GZqk
 
 {
-    "title": "new blog 111111",
-    "author": "new blog au23232323thor",
-    "url": "www.somewebsite.com",
-    "likes": "20"
+   "title":"React patterns",
+   "author":"Michael Chan",
+   "url":"https://reactpatterns.com/",
+   "likes":7
 }
