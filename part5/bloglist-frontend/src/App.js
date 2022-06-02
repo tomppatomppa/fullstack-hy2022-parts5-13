@@ -22,6 +22,7 @@ const App = () => {
 
   useEffect(() => {
     reloadBlogs();
+    console.log(blogs);
   }, []);
 
   useEffect(() => {
@@ -37,7 +38,21 @@ const App = () => {
     blogService
       .getAll()
       .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
-    console.log(blogs);
+  };
+
+  const handleRemoveButton = async (id) => {
+    const result = blogs.find((blog) => blog.id);
+    if (
+      result &&
+      window.confirm(`Remove blog ${result.title} by ${result.author}`)
+    ) {
+      try {
+        await blogService.deleteBlog(id);
+        reloadBlogs();
+      } catch (err) {
+        notify(`Error removing blog`, "alert");
+      }
+    }
   };
 
   const handleLikeButton = async (id) => {
@@ -74,12 +89,14 @@ const App = () => {
 
       blogService.setToken(user.token);
       setUser(user);
+
       setUsername("");
       setPassword("");
     } catch (exception) {
       notify("Wrong Credentials", "alert");
     }
   };
+
   const notify = (message, type = "info") => {
     setNotification({ message, type });
     setTimeout(() => {
@@ -163,7 +180,13 @@ const App = () => {
       </Togglable>
 
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} handleLikeChange={handleLikeButton} />
+        <Blog
+          key={blog.id}
+          user={user}
+          blog={blog}
+          handleLikeChange={handleLikeButton}
+          handleRemoveBlog={handleRemoveButton}
+        />
       ))}
     </div>
   );
