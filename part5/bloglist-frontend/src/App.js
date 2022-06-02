@@ -1,129 +1,128 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react'
 
-import Blog from "./components/Blog";
-import BlogForm from "./components/BlogForm";
-import Togglable from "./components/Togglable";
+import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
-import Notification from "./components/Notification";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
+import Notification from './components/Notification'
+import blogService from './services/blogs'
+import loginService from './services/login'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
+  const [blogs, setBlogs] = useState([])
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
 
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
 
-  const [notification, setNotification] = useState(null);
-
-  useEffect(() => {
-    reloadBlogs();
-    console.log(blogs);
-  }, []);
+  const [notification, setNotification] = useState(null)
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    reloadBlogs()
+  }, [])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
     }
-  }, []);
+  }, [])
 
   const reloadBlogs = () => {
     blogService
       .getAll()
-      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)));
-  };
+      .then((blogs) => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
+  }
 
   const handleRemoveButton = async (id) => {
-    const result = blogs.find((blog) => blog.id);
+    const result = blogs.find((blog) => blog.id)
     if (
       result &&
       window.confirm(`Remove blog ${result.title} by ${result.author}`)
     ) {
       try {
-        await blogService.deleteBlog(id);
-        reloadBlogs();
+        await blogService.deleteBlog(id)
+        reloadBlogs()
       } catch (err) {
-        notify(`Error removing blog`, "alert");
+        notify('Error removing blog', 'alert')
       }
     }
-  };
+  }
 
   const handleLikeButton = async (id) => {
-    const blog = blogs.filter((blog) => blog.id === id);
-    console.log(blog);
+    const blog = blogs.filter((blog) => blog.id === id)
+    console.log(blog)
     const updateBlog = {
       user: blog.user,
       likes: blog[0].likes + 1,
       author: blog.author,
       title: blog.title,
       url: blog.url,
-    };
-    await blogService.update(id, updateBlog);
-    reloadBlogs();
-  };
+    }
+    await blogService.update(id, updateBlog)
+    reloadBlogs()
+  }
 
   const handleLogout = (event) => {
-    event.preventDefault();
-    console.log("logout", user.name);
-    window.localStorage.clear();
-    setUser(null);
-  };
+    event.preventDefault()
+    console.log('logout', user.name)
+    window.localStorage.clear()
+    setUser(null)
+  }
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
     try {
       const user = await loginService.login({
         username,
         password,
-      });
+      })
 
-      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
+      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
 
-      blogService.setToken(user.token);
-      setUser(user);
+      blogService.setToken(user.token)
+      setUser(user)
 
-      setUsername("");
-      setPassword("");
+      setUsername('')
+      setPassword('')
     } catch (exception) {
-      notify("Wrong Credentials", "alert");
+      notify('Wrong Credentials', 'alert')
     }
-  };
+  }
 
-  const notify = (message, type = "info") => {
-    setNotification({ message, type });
+  const notify = (message, type = 'info') => {
+    setNotification({ message, type })
     setTimeout(() => {
-      setNotification(null);
-    }, 5000);
-  };
+      setNotification(null)
+    }, 5000)
+  }
 
   const addBlog = async (event) => {
-    event.preventDefault();
-    console.log(`title: ${title} Author: ${author}, Url: ${url}`);
+    event.preventDefault()
+    console.log(`title: ${title} Author: ${author}, Url: ${url}`)
 
     const newBlog = {
       title: title,
       author: author,
       url: url,
-    };
-    try {
-      await blogService.create(newBlog);
-      notify(`a new blog ${title} by ${author} added`);
-      reloadBlogs();
-      setAuthor("");
-      setTitle("");
-      setUrl("");
-    } catch (err) {
-      notify("error adding blog", "alert");
     }
-  };
+    try {
+      await blogService.create(newBlog)
+      notify(`a new blog ${title} by ${author} added`)
+      reloadBlogs()
+      setAuthor('')
+      setTitle('')
+      setUrl('')
+    } catch (err) {
+      notify('error adding blog', 'alert')
+    }
+  }
 
   const loginForm = () => (
     <form onSubmit={handleLogin}>
@@ -148,7 +147,7 @@ const App = () => {
       </div>
       <button>login</button>
     </form>
-  );
+  )
 
   if (user === null) {
     return (
@@ -157,7 +156,7 @@ const App = () => {
         <Notification message={notification} />
         {loginForm()}
       </div>
-    );
+    )
   }
   return (
     <div>
@@ -189,7 +188,7 @@ const App = () => {
         />
       ))}
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

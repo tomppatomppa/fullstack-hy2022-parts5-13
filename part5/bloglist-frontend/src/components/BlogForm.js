@@ -24,11 +24,11 @@ const BlogForm = ({
       </div>
       <div>
         url:
-        <input value={url} name={"Url"} onChange={handleUrlChange}></input>
+        <input value={url} name={'Url'} onChange={handleUrlChange}></input>
       </div>
       <button type="submit">create</button>
     </form>
   </div>
-);
+)
 
-export default BlogForm;
+export default BlogForm
