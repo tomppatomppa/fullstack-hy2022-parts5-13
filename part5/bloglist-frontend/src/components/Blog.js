@@ -22,7 +22,9 @@ const Blog = ({ user, blog, handleLikeChange, handleRemoveBlog }) => {
     <div style={blogStyle}>
       <div data-testid="initial-element" style={hideWhenVisible}>
         {blog.title} {blog.author}
-        <button onClick={toggleVisibility}>view</button>
+        <button data-testid="view-button" onClick={toggleVisibility}>
+          view
+        </button>
       </div>
       <div data-testid="hidden-element" style={showWhenVisible}>
         {blog.title} {blog.author}

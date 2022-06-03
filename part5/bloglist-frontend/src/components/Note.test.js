@@ -1,9 +1,10 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
-test('renders blog', () => {
+describe('tesing rendering blog', () => {
   const blog = {
     title: 'Some Title',
     author: 'some author',
@@ -17,11 +18,22 @@ test('renders blog', () => {
   const user = {
     username: 'some name',
   }
+  test('renders initial blog view ', () => {
+    render(<Blog blog={blog} user={user} />)
+    const element1 = screen.getByTestId('initial-element')
+    expect(element1).not.toHaveTextContent('likes', 'some url', 'some title')
 
-  render(<Blog blog={blog} user={user} />)
-  const element1 = screen.getByTestId('initial-element')
-  expect(element1).not.toHaveTextContent('likes', 'some url', 'some title')
+    const element2 = screen.getByTestId('hidden-element')
+    expect(element2).toHaveStyle('display: none;')
+  })
 
-  const element2 = screen.getByTestId('hidden-element')
-  expect(element2).toHaveStyle('none:')
+  test('render correctly when blog is expanded', async () => {
+    render(<Blog blog={blog} user={user} />)
+
+    const element = screen.getByTestId('hidden-element')
+    const button = screen.getByTestId('view-button')
+    await userEvent.click(button)
+    screen.debug(element)
+    expect(element).not.toHaveStyle('display: none;')
+  })
 })
