@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
-describe('tesing rendering blog', () => {
+describe('testing rendering blog', () => {
   const blog = {
     title: 'Some Title',
     author: 'some author',
@@ -35,5 +35,17 @@ describe('tesing rendering blog', () => {
     await userEvent.click(button)
     screen.debug(element)
     expect(element).not.toHaveStyle('display: none;')
+  })
+
+  test('Like button click is working correctly', async () => {
+    const mockHandler = jest.fn()
+    render(<Blog blog={blog} user={user} handleLikeChange={mockHandler} />)
+    const userTest = userEvent.setup()
+
+    const button = screen.getByText('like')
+    await userTest.click(button)
+    await userTest.click(button)
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
   })
 })
