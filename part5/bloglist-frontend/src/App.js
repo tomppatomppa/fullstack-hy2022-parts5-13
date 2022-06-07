@@ -4,6 +4,7 @@ import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 
 import Togglable from './components/Togglable'
+import LoginForm from './components/LoginForm'
 
 import Notification from './components/Notification'
 import blogService from './services/blogs'
@@ -110,30 +111,30 @@ const App = () => {
     }
   }
 
-  const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <h2>login to application</h2>
-      <div>
-        username
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button>login</button>
-    </form>
-  )
+  // const loginForm = () => (
+  //   <form onSubmit={handleLogin}>
+  //     <h2>login to application</h2>
+  //     <div>
+  //       username
+  //       <input
+  //         type="text"
+  //         value={username}
+  //         name="Username"
+  //         onChange={({ target }) => setUsername(target.value)}
+  //       />
+  //     </div>
+  //     <div>
+  //       password
+  //       <input
+  //         type="password"
+  //         value={password}
+  //         name="Password"
+  //         onChange={({ target }) => setPassword(target.value)}
+  //       />
+  //     </div>
+  //     <button>login</button>
+  //   </form>
+  // )
 
   const noteFormRef = useRef()
 
@@ -142,7 +143,13 @@ const App = () => {
       <div>
         <h1>Blogs</h1>
         <Notification message={notification} />
-        {loginForm()}
+        <LoginForm
+          handleSubmit={handleLogin}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          username={username}
+          password={password}
+        />
       </div>
     )
   }
