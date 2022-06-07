@@ -1,4 +1,4 @@
-describe('Note app', function () {
+describe('Blog app', function () {
   beforeEach(function () {
     cy.request('POST', 'http://localhost:3003/api/testing/reset')
     const user = {
@@ -34,6 +34,26 @@ describe('Note app', function () {
       cy.get('#login-button').click()
 
       cy.get('#notification').contains('red')
+    })
+  })
+
+  describe('When logged in', function () {
+    beforeEach(function () {
+      cy.contains('login').click()
+      cy.get('#username').type('tomi')
+      cy.get('#password').type('1234')
+      cy.get('#login-button').click()
+      cy.contains('tomi west logged-in')
+    })
+    it('Blog can be created', function () {
+      cy.contains('new blog').click()
+
+      cy.get('#title').type('created blog')
+      cy.get('#author').type('tomi west')
+      cy.get('#url').type('www.anywebsite.com')
+
+      cy.get('#create-button').click()
+      cy.contains('created blog tomi west')
     })
   })
 })
