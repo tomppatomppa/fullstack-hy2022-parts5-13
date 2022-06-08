@@ -54,6 +54,14 @@ describe('Blog app', function () {
 
       cy.get('#create-button').click()
       cy.contains('created blog tomi west')
+
+      describe('likes button adds likes', function () {
+        cy.contains('view').click()
+        cy.contains('likes 0')
+        cy.contains('like').click()
+
+        cy.contains('likes 1')
+      })
     })
   })
 })

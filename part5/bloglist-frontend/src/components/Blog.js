@@ -22,7 +22,11 @@ const Blog = ({ user, blog, handleLikeChange, handleRemoveBlog }) => {
     <div style={blogStyle}>
       <div data-testid="initial-element" style={hideWhenVisible}>
         {blog.title} {blog.author}
-        <button data-testid="view-button" onClick={toggleVisibility}>
+        <button
+          id="view-btn"
+          data-testid="view-button"
+          onClick={toggleVisibility}
+        >
           view
         </button>
       </div>
@@ -32,7 +36,9 @@ const Blog = ({ user, blog, handleLikeChange, handleRemoveBlog }) => {
         <div>{blog.url}</div>
         <div>
           likes {blog.likes ? blog.likes : 0}{' '}
-          <button onClick={() => handleLikeChange(blog.id)}>like</button>
+          <button id="like-button" onClick={() => handleLikeChange(blog.id)}>
+            like
+          </button>
         </div>
         <div>{blog.user.name}</div>
         {user.username === blog.user.username && (
