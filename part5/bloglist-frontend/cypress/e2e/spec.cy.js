@@ -62,6 +62,11 @@ describe('Blog app', function () {
 
         cy.contains('likes 1')
       })
+
+      describe('user who created blog can delete it', function () {
+        cy.contains('remove').click()
+        cy.contains('created blog tomi west').should('not.exist')
+      })
     })
   })
 })
