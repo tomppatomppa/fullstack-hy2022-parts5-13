@@ -19,7 +19,7 @@ const Blog = ({ user, blog, handleLikeChange, handleRemoveBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div id="blog" style={blogStyle}>
       <div data-testid="initial-element" style={hideWhenVisible}>
         {blog.title} {blog.author}
         <button
@@ -42,7 +42,9 @@ const Blog = ({ user, blog, handleLikeChange, handleRemoveBlog }) => {
         </div>
         <div>{blog.user.name}</div>
         {user.username === blog.user.username && (
-          <button onClick={() => handleRemoveBlog(blog.id)}>remove</button>
+          <button id="remove-button" onClick={() => handleRemoveBlog(blog.id)}>
+            remove
+          </button>
         )}
       </div>
     </div>

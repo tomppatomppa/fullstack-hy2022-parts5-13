@@ -59,13 +59,40 @@ describe('Blog app', function () {
         cy.contains('view').click()
         cy.contains('likes 0')
         cy.contains('like').click()
-
         cy.contains('likes 1')
       })
 
       describe('user who created blog can delete it', function () {
-        cy.contains('remove').click()
-        cy.contains('created blog tomi west').should('not.exist')
+        cy.get('#remove-button').click()
+        cy.contains('created blog tomi west')
+      })
+    })
+    describe('blogs are sorted depending on likes', function () {
+      it('add blogs', function () {
+        cy.contains('new blog').click()
+        cy.get('#title').type('first blog')
+        cy.get('#author').type('first first')
+        cy.get('#url').type('www.first.com')
+        cy.get('#create-button').click()
+
+        cy.get('#title').type('second blog')
+        cy.get('#author').type('second west')
+        cy.get('#url').type('www.second.com')
+        cy.get('#create-button').click()
+
+        cy.get('#title').type('this should be at index 0')
+        cy.get('#author').type('index 0')
+        cy.get('#url').type('www.index0.com')
+        cy.get('#create-button').click()
+
+        cy.wait(1000)
+        cy.get('[id^=view-btn').click({ multiple: true })
+        cy.get('div').find('#like-button').last().click()
+
+        cy.wait(1000) //withour wait the click doesnt have time to update
+        cy.get('[data-testid="hidden-element"]')
+          .eq(0)
+          .contains('this should be at index 0')
       })
     })
   })
